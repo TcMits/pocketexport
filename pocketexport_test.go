@@ -49,7 +49,7 @@ func getExportRecord(t *testing.T, app core.App) *models.Record {
 }
 
 func Test_pocketExport_ValidateAndFill(t *testing.T) {
-	testApp, err := tests.NewTestApp("./pb_data")
+	testApp, err := tests.NewTestApp("./test_data")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -179,7 +179,7 @@ func Test_pocketExport_ValidateAndFill(t *testing.T) {
 }
 
 func Test_pocketExport_GenerateExportOutput(t *testing.T) {
-	testApp, err := tests.NewTestApp("./pb_data")
+	testApp, err := tests.NewTestApp("./test_data")
 	if err != nil {
 		t.Fatal(err)
 	}
