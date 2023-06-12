@@ -156,34 +156,32 @@ func (p *pocketExport) Register(opts ...RegisterOption) error {
 	}
 
 	// validate export records
-	p.app.OnModelBeforeCreate().Add(func(e *core.ModelEvent) (err error) {
-		if e.Model.TableName() != PocketExportCollectionName {
+	p.app.OnRecordBeforeCreateRequest().Add(func(e *core.RecordCreateEvent) (err error) {
+		if e.Record.TableName() != PocketExportCollectionName {
 			return nil
 		}
 
-		record := e.Model.(*models.Record)
-
 		filename := security.RandomString(20)
-		switch record.GetString(FormatField) {
+		switch e.Record.GetString(FormatField) {
 		case FormatCSV:
 			filename += ".csv"
 		case FormatXLSX:
 			filename += ".xlsx"
 		}
 
-		record.Set(OutputField, filename)
-		_, err = p.ValidateAndFill(record)
+		e.Record.Set(OutputField, filename)
+		_, err = p.ValidateAndFill(e.Record)
 		return
 	})
 
 	// after create export generate output
-	p.app.OnModelAfterCreate().Add(func(e *core.ModelEvent) error {
-		if e.Model.TableName() != PocketExportCollectionName {
+	p.app.OnRecordAfterCreateRequest().Add(func(e *core.RecordCreateEvent) error {
+		if e.Record.TableName() != PocketExportCollectionName {
 			return nil
 		}
 
 		if rc.generateOutputInBackground {
-			recordId := e.Model.GetId()
+			recordId := e.Record.GetId()
 			routine.FireAndForget(func() {
 				record, err := p.app.Dao().FindRecordById(PocketExportCollectionName, recordId)
 				if err != nil {
@@ -206,7 +204,7 @@ func (p *pocketExport) Register(opts ...RegisterOption) error {
 			return nil
 		}
 
-		export := NewExport(e.Model.(*models.Record))
+		export := NewExport(e.Record)
 		if err := export.Fill(p.app.Dao()); err != nil {
 			return err
 		}
