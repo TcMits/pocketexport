@@ -146,7 +146,6 @@ func (p *pocketExport) Register(opts ...RegisterOption) error {
 		file.Name = file.OriginalName
 
 		fileKey := export.BaseFilesPath() + "/" + file.Name
-		log.Println("fileKey", fileKey)
 		if err := fs.UploadFile(file, fileKey); err != nil {
 			return err
 		}
