@@ -1,0 +1,29 @@
+repos:
+- repo: https://github.com/Lucas-C/pre-commit-hooks
+  rev: v1.4.2
+  hooks:
+    - id: remove-tabs
+      args: [--whitespaces-count, "2"]  # defaults to: 4
+      files: \.md$
+
+- repo: https://github.com/dnephin/pre-commit-golang
+  rev: v0.5.1
+  hooks:
+    - id: go-fmt
+    - id: go-vet
+    - id: go-imports
+    - id: validate-toml
+    - id: no-go-testing
+    - id: go-mod-tidy
+
+- repo: https://github.com/Bahjat/pre-commit-golang
+  rev: v1.0.2
+  hooks:
+    - id: gofumpt # requires github.com/mvdan/gofumpt
+
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.4.0
+  hooks:
+    - id: trailing-whitespace
+    - id: end-of-file-fixer
+    - id: check-yaml
