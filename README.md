@@ -10,6 +10,7 @@ package main
 import (
   "log"
 
+  _ "github.com/TcMits/pocketexport/migrations"
   "github.com/TcMits/pocketexport"
   "github.com/pocketbase/pocketbase"
 )

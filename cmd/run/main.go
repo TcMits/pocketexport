@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/TcMits/pocketexport"
+	_ "github.com/TcMits/pocketexport/migrations"
 	"github.com/pocketbase/pocketbase"
 	// "github.com/pocketbase/pocketbase/plugins/migratecmd"
 )

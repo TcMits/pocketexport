@@ -7,7 +7,6 @@ import (
 	"log"
 	"time"
 
-	_ "github.com/TcMits/pocketexport/migrations"
 	"github.com/pocketbase/dbx"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/pocketbase/pocketbase/daos"
