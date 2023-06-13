@@ -88,39 +88,36 @@ func Register(app core.App, opts ...RegisterOption) error {
 	return New(app).Register(opts...)
 }
 
-type PocketExport interface {
+type IPocketExport interface {
 	// ValidateAndFill validates the record and fills the export
 	// this function should be called after using form validation because
 	// it does not fully validate the record
 	ValidateAndFill(*models.Record) (*Export, error)
 	// GenerateExportOutput generates the output for the export
 	GenerateExportOutput(io.Writer, *Export) error
-	// Register registers the pocketexport app with the core.App
-	// this function is supposed to be called once
-	Register(...RegisterOption) error
 }
 
-type pocketExport struct {
+type PocketExport struct {
 	app core.App
 }
 
 // New creates a new pocketexport
-func New(app core.App) PocketExport {
-	return &pocketExport{app: app}
+func New(app core.App) *PocketExport {
+	return &PocketExport{app: app}
 }
 
 // ValidateRecord implement PocketExport interface
-func (p *pocketExport) ValidateAndFill(r *models.Record) (*Export, error) {
+func (p *PocketExport) ValidateAndFill(r *models.Record) (*Export, error) {
 	return p.validateAndFill(r)
 }
 
 // GenerateExportOutput implement PocketExport interface
-func (p *pocketExport) GenerateExportOutput(dst io.Writer, r *Export) error {
+func (p *PocketExport) GenerateExportOutput(dst io.Writer, r *Export) error {
 	return p.generateExportOutput(dst, r)
 }
 
 // Register implement PocketExport interface
-func (p *pocketExport) Register(opts ...RegisterOption) error {
+func (p *PocketExport) Register(opts ...RegisterOption) error {
 	rc := defaultRegisterConfig
 	for _, opt := range opts {
 		opt(&rc)

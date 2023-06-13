@@ -16,7 +16,7 @@ import (
 )
 
 // GenerateExportOutput generates the export output.
-func (s *pocketExport) generateExportOutput(dst io.Writer, export *Export) (err error) {
+func (s *PocketExport) generateExportOutput(dst io.Writer, export *Export) (err error) {
 	filter := export.GetString(FilterField)
 	sort := export.GetString(SortField)
 
@@ -31,7 +31,7 @@ func (s *pocketExport) generateExportOutput(dst io.Writer, export *Export) (err 
 }
 
 // generateExportGetRecordValue is used to get the value of a record.
-func (s *pocketExport) generateExportGetRecordValue(r *models.Record, item *HeaderItem, splitKey []string) any {
+func (s *PocketExport) generateExportGetRecordValue(r *models.Record, item *HeaderItem, splitKey []string) any {
 	nestedRecord := r
 	lenSplitKey := len(splitKey)
 
@@ -60,7 +60,7 @@ func (s *pocketExport) generateExportGetRecordValue(r *models.Record, item *Head
 }
 
 // generateExportGetHeaderSplitMap return the header split map from header map.
-func (s *pocketExport) generateExportGetHeaderSplitMap(headerMap []HeaderItem) map[string][]string {
+func (s *PocketExport) generateExportGetHeaderSplitMap(headerMap []HeaderItem) map[string][]string {
 	headerSplitMap := make(map[string][]string, len(headerMap))
 
 	for i := range headerMap {
@@ -73,7 +73,7 @@ func (s *pocketExport) generateExportGetHeaderSplitMap(headerMap []HeaderItem) m
 }
 
 // generateExportGetExpandsFromHeaderSplitMap return the expands from header split map.
-func (s *pocketExport) generateExportGetExpandsFromHeaderSplitMap(headerSplitMap map[string][]string) []string {
+func (s *PocketExport) generateExportGetExpandsFromHeaderSplitMap(headerSplitMap map[string][]string) []string {
 	expands := make([]string, 0, len(headerSplitMap))
 
 	for _, splitKey := range headerSplitMap {
@@ -84,7 +84,7 @@ func (s *pocketExport) generateExportGetExpandsFromHeaderSplitMap(headerSplitMap
 }
 
 // generateExportOutputRecords generates the export output records.
-func (s *pocketExport) generateExportOutputRecords(
+func (s *PocketExport) generateExportOutputRecords(
 	records *[]*models.Record,
 	filter string,
 	sort string,
@@ -136,7 +136,7 @@ func (s *pocketExport) generateExportOutputRecords(
 }
 
 // generateExportCSVOutput generates the export csv output.
-func (s *pocketExport) generateExportCSVOutput(
+func (s *PocketExport) generateExportCSVOutput(
 	buffer io.Writer,
 	filter string,
 	sort string,
@@ -202,7 +202,7 @@ func (s *pocketExport) generateExportCSVOutput(
 }
 
 // generateExportCSVOutput generates the export xlsx output.
-func (s *pocketExport) generateExportXLSXOutput(
+func (s *PocketExport) generateExportXLSXOutput(
 	buffer io.Writer,
 	filter string,
 	sort string,

@@ -17,7 +17,7 @@ var (
 )
 
 // validateAndFill validates the record and fills the export
-func (s *pocketExport) validateAndFill(r *models.Record) (*Export, error) {
+func (s *PocketExport) validateAndFill(r *models.Record) (*Export, error) {
 	if r.TableName() != PocketExportCollectionName {
 		return nil, ErrIsNotExport
 	}
