@@ -141,14 +141,7 @@ func (p *PocketExport) Register(opts ...RegisterOption) error {
 		}
 		// ensure file name is original name
 		file.Name = file.OriginalName
-
-		fileKey := export.BaseFilesPath() + "/" + file.Name
-		if err := fs.UploadFile(file, fileKey); err != nil {
-			return err
-		}
-
-		export.Set(OutputField, file.Name)
-		return nil
+		return fs.UploadFile(file, export.BaseFilesPath()+"/"+file.Name)
 	}
 
 	// validate export records
