@@ -124,24 +124,20 @@ func (p *PocketExport) Register(opts ...RegisterOption) error {
 	}
 
 	// uploadFile will upload file to filesystem
-	uploadFile := func(export *Export) error {
+	getFile := func(export *Export) (*filesystem.File, error) {
 		buf := bytes.NewBuffer(nil)
 		if err := p.GenerateExportOutput(buf, export); err != nil {
-			return err
-		}
-
-		fs, err := p.app.NewFilesystem()
-		if err != nil {
-			return err
+			return nil, err
 		}
 
 		file, err := filesystem.NewFileFromBytes(buf.Bytes(), export.GetString(OutputField))
 		if err != nil {
-			return err
+			return nil, err
 		}
+
 		// ensure file name is original name
 		file.Name = file.OriginalName
-		return fs.UploadFile(file, export.BaseFilesPath()+"/"+file.Name)
+		return file, nil
 	}
 
 	// validate export records
@@ -159,17 +155,32 @@ func (p *PocketExport) Register(opts ...RegisterOption) error {
 		}
 
 		e.Record.Set(OutputField, filename)
-		_, err = p.ValidateAndFill(e.Record)
+		export, err := p.ValidateAndFill(e.Record)
+		if err != nil {
+			return err
+		}
+
+		if rc.generateOutputInBackground {
+			return nil
+		}
+
+		file, err := getFile(export)
+		if err != nil {
+			return err
+		}
+
+		// upload file to filesystem
+		e.UploadedFiles[OutputField] = []*filesystem.File{file}
 		return
 	})
 
 	// after create export generate output
-	p.app.OnRecordAfterCreateRequest().Add(func(e *core.RecordCreateEvent) error {
-		if e.Record.TableName() != PocketExportCollectionName {
-			return nil
-		}
+	if rc.generateOutputInBackground {
+		p.app.OnRecordAfterCreateRequest().Add(func(e *core.RecordCreateEvent) error {
+			if e.Record.TableName() != PocketExportCollectionName {
+				return nil
+			}
 
-		if rc.generateOutputInBackground {
 			recordId := e.Record.GetId()
 			routine.FireAndForget(func() {
 				record, err := p.app.Dao().FindRecordById(PocketExportCollectionName, recordId)
@@ -184,22 +195,27 @@ func (p *PocketExport) Register(opts ...RegisterOption) error {
 					return
 				}
 
-				if err = uploadFile(export); err != nil {
+				file, err := getFile(export)
+				if err != nil {
 					log.Printf("pocketexport: upload file failed: %v", err)
 					return
+				}
+
+				fs, err := p.app.NewFilesystem()
+				if err != nil {
+					log.Printf("pocketexport: get filesystem failed: %v", err)
+					return
+				}
+
+				fileKey := record.BaseFilesPath() + "/" + file.Name
+				if err = fs.UploadFile(file, fileKey); err != nil {
+					log.Printf("pocketexport: upload file failed: %v", err)
 				}
 			})
 
 			return nil
-		}
-
-		export := NewExport(e.Record)
-		if err := export.Fill(p.app.Dao()); err != nil {
-			return err
-		}
-
-		return uploadFile(export)
-	})
+		})
+	}
 
 	// after create delete old exports
 	if rc.autoDelete {
