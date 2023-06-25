@@ -123,7 +123,6 @@ func (p *PocketExport) Register(opts ...RegisterOption) error {
 		opt(&rc)
 	}
 
-	// uploadFile will upload file to filesystem
 	getFile := func(export *Export) (*filesystem.File, error) {
 		buf := bytes.NewBuffer(nil)
 		if err := p.GenerateExportOutput(buf, export); err != nil {
