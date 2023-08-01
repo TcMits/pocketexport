@@ -96,7 +96,7 @@ func (s *PocketExport) generateExportOutputRecords(
 	fieldResolver := resolvers.NewRecordFieldResolver(
 		dao,
 		export.ExportCollection(),
-		&models.RequestData{
+		&models.RequestInfo{
 			Method:     http.MethodGet,
 			Query:      map[string]any{},
 			Data:       map[string]any{},
@@ -309,8 +309,9 @@ type exportEchoContext struct {
 // Get returns the value of the given key
 // It will return the request data if the key is apis.ContextRequestDataKey
 func (c *exportEchoContext) Get(key string) interface{} {
-	if key == apis.ContextRequestDataKey {
-		return &models.RequestData{
+	switch key {
+	case apis.ContextRequestInfoKey:
+		return &models.RequestInfo{
 			Method:     http.MethodGet,
 			Query:      map[string]any{},
 			Data:       map[string]any{},
@@ -318,9 +319,15 @@ func (c *exportEchoContext) Get(key string) interface{} {
 			AuthRecord: c.export.AuthRecord(),
 			Admin:      c.export.Admin(),
 		}
+	case apis.ContextAdminKey:
+		return c.export.Admin()
+	case apis.ContextAuthRecordKey:
+		return c.export.AuthRecord()
+	case apis.ContextCollectionKey:
+		return c.export.Collection()
 	}
 
-	return c.Get(key)
+	return nil
 }
 
 // QueryParam returns the query param of the given key

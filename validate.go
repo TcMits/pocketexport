@@ -40,7 +40,7 @@ func (s *PocketExport) validateAndFill(r *models.Record) (*Export, error) {
 	fieldResolver := resolvers.NewRecordFieldResolver(
 		dao,
 		export.ExportCollection(),
-		&models.RequestData{
+		&models.RequestInfo{
 			Method:     http.MethodGet,
 			Query:      map[string]any{},
 			Data:       map[string]any{},
