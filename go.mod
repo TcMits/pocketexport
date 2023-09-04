@@ -7,7 +7,7 @@ require (
 	github.com/labstack/echo/v5 v5.0.0-20230722203903-ec5b858dab61
 	github.com/pocketbase/dbx v1.10.0
 	github.com/pocketbase/pocketbase v0.17.5
-	github.com/xuri/excelize/v2 v2.7.1
+	github.com/xuri/excelize/v2 v2.8.0
 )
 
 require (
@@ -61,8 +61,8 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
-	github.com/xuri/efp v0.0.0-20220603152613-6918739fd470 // indirect
-	github.com/xuri/nfp v0.0.0-20220409054826-5e722a1d9e22 // indirect
+	github.com/xuri/efp v0.0.0-20230802181842-ad255f2331ca // indirect
+	github.com/xuri/nfp v0.0.0-20230819163627-dc951e3ffe1a // indirect
 	go.opencensus.io v0.24.0 // indirect
 	gocloud.dev v0.32.0 // indirect
 	golang.org/x/crypto v0.12.0 // indirect
